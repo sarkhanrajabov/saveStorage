@@ -1,6 +1,6 @@
 /**
  * jQuery saveStorage - 23.06.2019
- * Version: 1.0.0
+ * Version: 1.0.1
  * Website: https://sarkhanrajabov.com/
  * Author: Sarkhan Rajabov
 **/
@@ -14,13 +14,17 @@
                 key = $(this).attr('id')+'_saveStorage',
                 nonSavingInp = '';
 
-            if(options){
-                $.each(options.nonSavingInputs, function(k,v){
-                    nonSavingInp += 'input[type='+v+'],'
-                })
-            }
+            var defaults = {
+                nonSavingInputs: []
+            };
 
-            form.find('input,select,textarea').bind('change keyup', function () {
+            var opts = $.extend({}, defaults, options);
+
+            $.each(opts.nonSavingInputs, function(k,v){
+                nonSavingInp += 'input[type='+v+'],'
+            });
+
+            form.find(':input').bind('change keyup', function () {
                 var serializeForm = form.serializeArray();
                 localStorage.setItem(key, JSON.stringify(serializeForm));
             });
@@ -44,7 +48,7 @@
 
             form.submit(function () {
                 localStorage.removeItem(key);
-            })
+            });
         }
         else {
             console.error('Sorry! No web storage support.')

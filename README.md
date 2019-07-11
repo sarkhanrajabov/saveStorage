@@ -19,7 +19,7 @@ Include jquery and saveStorage JS file
 
 HTML
 
-    <form action="/action" id="myform"> // id required
+    <form id="myform"> // id required
       <div>
         <label>Name</label>
         <input type="text" name="name">

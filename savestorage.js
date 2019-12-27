@@ -29,26 +29,28 @@
                 localStorage.setItem(key, JSON.stringify(serializeForm));
             });
 
-            var data = JSON.parse(localStorage.getItem(key));
+            if(localStorage.getItem(key) !== null){
+                var data = JSON.parse(localStorage.getItem(key));
 
-            $(data).each(function(k,v){
-                form.find(':input[name='+v.name+']').not(nonSavingInp+'input[type=radio], input[type=checkbox]').val(v.value);
+                $(data).each(function(k,v){
+                    form.find(':input[name='+v.name+']').not(nonSavingInp+'input[type=radio], input[type=checkbox]').val(v.value);
 
-                $(form.find('input[type=radio]')).each(function () {
-                    if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
-                        $(this).prop('checked', true)
-                    }
+                    $(form.find('input[type=radio]')).each(function () {
+                        if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
+                            $(this).prop('checked', true)
+                        }
+                    });
+                    $(form.find('input[type=checkbox]')).each(function () {
+                        if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
+                            $(this).prop('checked', true)
+                        }
+                    });
                 });
-                $(form.find('input[type=checkbox]')).each(function () {
-                    if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
-                        $(this).prop('checked', true)
-                    }
-                });
-            });
 
-            form.submit(function () {
-                localStorage.removeItem(key);
-            });
+                form.submit(function () {
+                    localStorage.removeItem(key);
+                });
+            }
         }
         else {
             console.error('Sorry! No web storage support.')

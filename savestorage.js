@@ -1,7 +1,7 @@
 /**
  * jQuery saveStorage - 23.06.2019
- * Version: 1.0.1
- * Website: https://sarkhanrajabov.com/
+ * Version: 2.0.0
+ * Website: https://github.com/Serxan96/saveStorage
  * Author: Sarkhan Rajabov
 **/
 
@@ -10,47 +10,61 @@
         'use strict';
 
         if(typeof Storage !== "undefined"){
-            var form = $(this),
-                key = $(this).attr('id')+'_saveStorage',
-                nonSavingInp = '';
 
-            var defaults = {
-                nonSavingInputs: []
-            };
+            var form     = $(this),
+                key      = $(this).attr('id')+'_saveStorage',
+                defaults = {
+                    exclude: []
+                };
 
             var opts = $.extend({}, defaults, options);
 
-            $.each(opts.nonSavingInputs, function(k,v){
-                nonSavingInp += 'input[type='+v+'],'
-            });
+            var excludeInputType = function(){
+                var inputType = '';
+
+                $.each(opts.exclude, function(k,v){
+                    inputType += 'input[type='+v+'],'
+                });
+
+                return inputType;
+            };
 
             form.find(':input').bind('change keyup', function () {
                 var serializeForm = form.serializeArray();
                 localStorage.setItem(key, JSON.stringify(serializeForm));
             });
 
-            if(localStorage.getItem(key) !== null){
-                var data = JSON.parse(localStorage.getItem(key));
+            var initApp = function(){
+                if(localStorage.getItem(key) !== null){
 
-                $(data).each(function(k,v){
-                    form.find(':input[name='+v.name+']').not(nonSavingInp+'input[type=radio], input[type=checkbox]').val(v.value);
+                    var data          = JSON.parse(localStorage.getItem(key)),
+                        inputRadio    = form.find('input[type=radio]'),
+                        inputCheckbox = form.find('input[type=checkbox]');
 
-                    $(form.find('input[type=radio]')).each(function () {
-                        if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
-                            $(this).prop('checked', true)
+                    for(var i = 0; i < data.length; i++){
+                        form.find(':input[name='+data[i].name+']')
+                            .not(excludeInputType() + 'input[type=radio], input[type=checkbox]').val(data[i].value);
+
+                        for(var j = 0; j < inputRadio.length; j++){
+                            if(inputRadio[j].getAttribute('name') === data[i].name && inputRadio[j].getAttribute('value') === data[i].value){
+                                inputRadio[j].checked = true;
+                            }
                         }
-                    });
-                    $(form.find('input[type=checkbox]')).each(function () {
-                        if($(this).attr('name') === v.name && $(this).attr('value') === v.value){
-                            $(this).prop('checked', true)
-                        }
-                    });
-                });
 
-                form.submit(function () {
-                    localStorage.removeItem(key);
-                });
-            }
+                        for(var k = 0; k < inputCheckbox.length; k++){
+                            if(inputCheckbox[k].getAttribute('name') === data[i].name && inputCheckbox[k].getAttribute('value') === data[i].value){
+                                inputCheckbox[k].checked = true;
+                            }
+                        }
+                    }
+                }
+            };
+
+            form.submit(function () {
+                localStorage.removeItem(key);
+            });
+
+            initApp();
         }
         else {
             console.error('Sorry! No web storage support.')

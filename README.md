@@ -1,5 +1,5 @@
 # saveStorage
-saveStorage is a JQuery plugin for easliy save form data
+> saveStorage is a lightweight jQuery plugin that automatically stores and recovers form values to prevent losing data when editing an HTML form.
 
 Supported elements:
 ----------------------
@@ -12,10 +12,9 @@ Supported elements:
 Usage:
 ---------------------
 Include jquery and saveStorage JS file
-
   
     <script src="jquery.js"></script>
-    <script src="savestorage.js"></script>
+    <script src="savestorage.min.js"></script>
 
 HTML
 
@@ -38,5 +37,5 @@ Options:
 ------------------
 
     $('#myform').saveStorage({
-        nonSavingInputs: ['password','hidden']  // does not save input types
+        exclude: ['password','hidden']  // does not save input types
     });

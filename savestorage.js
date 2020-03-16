@@ -1,7 +1,7 @@
 /**
  * jQuery saveStorage - 23.06.2019
  * Version: 2.0.0
- * Website: https://github.com/Serxan96/saveStorage
+ * Website: https://github.com/sarkhanrajabov/saveStorage
  * Author: Sarkhan Rajabov
 **/
 
